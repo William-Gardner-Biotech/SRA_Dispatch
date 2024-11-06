@@ -1,0 +1,30 @@
+{
+    "process_configs": {
+      "max_cpu_request": 160,
+      "cpu_per_node": 4,
+      "memory_request": 32,
+      "disk_request": 10000000000,
+      "minimum_submissions_for_balancing": 100,
+      "on_chtc": 0
+    },
+    "dates": {
+      "start": "11-03-2022",
+      "end": "15-03-2022"
+    },
+    "query": {
+        "keyword1": "wastewater",
+        "keyword2": "sars-cov-2"
+  },
+  "files": {
+      "sra_list_folder": "sras_to_process",
+      "sra_query_file": "sra_queue.txt",
+      "static_files": "static_files.tar.gz",
+      "modules": "modules.tar.gz",
+      "sra_processing_program": "download_sra_batches.sh"
+  },
+  "directory": {
+      "output_results": "/staging/Placeholder",
+      "fasterq-temp": "/staging/fasterq-temp",
+      "home": "/home/"
+  }
+}
