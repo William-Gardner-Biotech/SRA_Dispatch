@@ -1,13 +1,17 @@
+#!/usr/bin/env python3
+
 import os
 import time
 
-from read_config import load_config
-from query_SRA_for_size import generate_SRR_size_df
-from balance_nodes import balance_nodes
-from build_submit_file import populate_submit_file
+from loguru import logger as lager
+
+from .balance_nodes import balance_nodes
+from .build_submit_file import populate_submit_file
+from .query_SRA_for_size import generate_SRR_size_df
+from .read_config import load_config
 
 
-def main():
+def main() -> None:
     """
     This program orchestrates a distributed computing workflow for downloading and processing SRA (Sequence Read Archive) data.
     It consists of several key components:
@@ -47,14 +51,15 @@ def main():
 
     # Make the output directory on chtc that will hold our processed files
     if config["process_configs"]["on_chtc"]:
-
-        print("On chtc")
+        lager.info(
+            "Configuring run for CHTC's HTC Cluster using the HTCondor workload manager.",
+        )
 
         # Will throw an error if dir already exists
-        os.makedirs(config["directory"]["output_results"], exist_ok=False)
+        os.makedirs(config["directory"]["output_results"], exist_ok=False)  # noqa: PTH103
 
     else:
-        print("Not on chtc")
+        lager.warning("Configuring local, non-HTCondor run. Proceed with caution.")
 
     srr_with_size = generate_SRR_size_df(config)
 
@@ -63,8 +68,9 @@ def main():
     populate_submit_file(submit_configs)
 
     end_time = time.time()
-    ex_time = end_time-program_start_time
-    print(f"\n\nTotal Time of program: {ex_time}")
+    ex_time = end_time - program_start_time
+    lager.info(f"\n\nTotal Time of program: {ex_time}")
+
 
 if __name__ == "__main__":
     main()

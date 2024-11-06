@@ -1,7 +1,9 @@
 import textwrap
 
+from loguru import logger
 
-def populate_submit_file(configs:dict):
+
+def populate_submit_file(configs: dict) -> None:
     """
     Creates an HTCondor submit file with parameters calculated from the configuration.
 
@@ -53,4 +55,4 @@ def populate_submit_file(configs:dict):
     with open(submit_file_path, "w") as submit_file:
         submit_file.write(submit_file_content)
 
-    print(f"Submit file written to: {submit_file_path}")
+    logger.info(f"Submit file written to: {submit_file_path}")
