@@ -1,9 +1,8 @@
 *
 
 # Allow src folder
-!/src
-!/src/sra_dispatch
-!/src/sra_dispatch/*.py
+!/sra_dispatch
+!/sra_dispatch/*.py
 
 # allow assets and config directories
 !/assets
