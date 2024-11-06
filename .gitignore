@@ -1,0 +1,23 @@
+*
+
+# Allow src folder
+!src
+!src/**
+src/**/__pycache__/
+
+# Allow SRA pulldown files
+!modules
+!modules/**
+
+!static_files
+!static_files/**
+
+# Allow standard Git files
+!.gitignore
+!README.md
+!LICENSE
+!pyproject.toml
+
+# Allow scripts for CHTC
+!download_sra_batches.sh
+!config.json
