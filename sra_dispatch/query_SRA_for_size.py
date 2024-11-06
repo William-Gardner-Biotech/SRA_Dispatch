@@ -1,12 +1,13 @@
 import gc
 from datetime import date, datetime, timedelta
+import os
 
 import pandas as pd
 from loguru import logger as lager
 from pysradb.search import SraSearch
 
 
-def generate_SRR_size_df(configs: dict) -> pd.DataFrame:
+def query_SRR_for_size_df(configs: dict) -> pd.DataFrame:
     """
     Build a query into SRA using config file specified dates. The dates are called start and end and are from a chronological
     perspective. Start means the day further back in time and end is more recent in time. All of the values handled by
@@ -79,11 +80,13 @@ def generate_SRR_size_df(configs: dict) -> pd.DataFrame:
         len(SRR_with_sizes)
         < configs["process_configs"]["minimum_submissions_for_balancing"]
     ):
-        with open(f"{start_date}_{end_date}", "w") as f:
+
+        too_few_submissions_file = os.path.join(os.getcwd(), f"{start_date}_{end_date}")
+        with open(too_few_submissions_file, "w") as f:
             # File is built that contains a sequential list of SRR's that can be used
             f.write("\n".join(set(SRR_with_sizes["run_1_accession"].tolist())))
         exit(f"Too few SRR submissions to balance, consider running locally \
-             \n File: {start_date}_{end_date} was built and contains all run accessions\n\
+             \n File: {too_few_submissions_file} was built and contains all run accessions\n\
             for use with modules/sra_cryptic_loop.sh -s {start_date}_{end_date}")
 
     return SRR_with_sizes

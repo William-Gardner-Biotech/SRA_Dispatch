@@ -3,7 +3,7 @@ import textwrap
 from loguru import logger
 
 
-def populate_submit_file(configs: dict) -> None:
+def build_submit_file(configs: dict) -> None:
     """
     Creates an HTCondor submit file with parameters calculated from the configuration.
 

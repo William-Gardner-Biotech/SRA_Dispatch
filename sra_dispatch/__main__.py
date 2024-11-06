@@ -5,11 +5,14 @@ import time
 
 from loguru import logger as lager
 
-from .balance_nodes import balance_nodes
-from .build_submit_file import populate_submit_file
-from .query_SRA_for_size import generate_SRR_size_df
-from .read_config import load_config
+# Set the base directory as the working directory
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # __file__ is the .py file executed
+os.chdir(base_dir) # base dir is the
 
+from sra_dispatch.balance_nodes import balance_nodes
+from sra_dispatch.build_submit_file import build_submit_file
+from sra_dispatch.query_SRA_for_size import query_SRR_for_size_df
+from sra_dispatch.read_config import load_config
 
 def main() -> None:
     """
@@ -47,7 +50,7 @@ def main() -> None:
     """
     program_start_time = time.time()
 
-    config = load_config("config.json")
+    config = load_config(os.path.join(base_dir, "config/config.json"))
 
     # Make the output directory on chtc that will hold our processed files
     if config["process_configs"]["on_chtc"]:
@@ -61,11 +64,11 @@ def main() -> None:
     else:
         lager.warning("Configuring local, non-HTCondor run. Proceed with caution.")
 
-    srr_with_size = generate_SRR_size_df(config)
+    srr_with_size = query_SRR_for_size_df(config)
 
     submit_configs = balance_nodes(srr_with_size, config)
 
-    populate_submit_file(submit_configs)
+    build_submit_file(submit_configs)
 
     end_time = time.time()
     ex_time = end_time - program_start_time
