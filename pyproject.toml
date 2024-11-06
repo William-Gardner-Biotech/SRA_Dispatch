@@ -1,25 +1,15 @@
 [project]
-name = "sra_crypt"
+name = "sra_dispatch"
 version = "0.1.0"
 description = "Tool for large-scale trolling of the Sequence Read Archive for SARS-CoV-2 cryptic lineages."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 dependencies = [
-    "duckdb>=1.0.0",
-    "polars>=1.5.0",
     "pandas>=2.2.2",
     "pysradb>=2.2.0",
-    "pydantic>=2.8.2",
-    "pyarrow>=17.0.0",
     "loguru>=0.7.2",
-    "whenever>=0.6.7",
-    "rich>=13.7.1",
-    "anyio>=4.4.0",
-    "bio>=1.7.1",
-    "xlsxwriter>=3.2.0",
     "tqdm>=4.66.5",
-    "xlsx2csv>=0.8.3",
     "dask>=2024.8.2",
     "dask-expr>=1.1.13",
     "distributed>=2024.8.2",
@@ -48,4 +38,4 @@ dev-dependencies = [
 compile-bytecode = true
 
 [project.scripts]
-"sra_crypt" = "sra_crypt.__main__:main"
+"sra_dispatch" = "sra_dispatch.__main__:main"

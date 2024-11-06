@@ -1,16 +1,21 @@
 *
 
 # Allow src folder
-!src
-!src/**
-src/**/__pycache__/
+!/src
+!/src/sra_dispatch
+!/src/sra_dispatch/*.py
+
+# allow assets and config directories
+!/assets
+!/assets/modules
+!/assets/static_files
+!/config
 
 # Allow SRA pulldown files
-!modules
-!modules/**
-
-!static_files
-!static_files/**
+!/assets/modules/*.py
+!/assets/static_files/*.py
+!/assets/static_files/*.fasta*
+!/assets/static_files/*.gbk
 
 # Allow standard Git files
 !.gitignore
@@ -18,10 +23,12 @@ src/**/__pycache__/
 !LICENSE
 !pyproject.toml
 
-# Allow scripts for CHTC
-!download_sra_batches.sh
-!config.json
+# Allow scripts and configurations that are specific to CHTC
+!/assets/download_sra_batches.sh
+!/config/*.json
 
 # Allow test files
-!tests
-!tests/**
+!/tests
+!/tests/*.py
+!/tests/*.json
+
