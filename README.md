@@ -11,8 +11,7 @@ A Python-based distributed computing workflow for efficiently downloading and pr
 
 ## Prerequisites
 
-- Python 3.x
-- HTCondor (for distributed computing)
+- Python 3.9
 - pysradb
 - pandas
 - loguru
@@ -22,6 +21,7 @@ A Python-based distributed computing workflow for efficiently downloading and pr
 ```bash
 git clone [your-repository-url]
 cd [repository-name]
+
 pip install -r requirements.txt
 ```
 
@@ -61,7 +61,7 @@ Create a `config.json` file in the `config/` directory with the following struct
 2. Run the workflow:
 
 ```bash
-python __main__.py
+python3 -m sra_dispatch
 ```
 
 The workflow will:
@@ -97,11 +97,3 @@ The workflow generates HTCondor submit files with computed resource requirements
 - Set `on_chtc: false` in config for local, non-HTCondor execution
 - File sizes include a 20x multiplier for fasterq-dump processing
 - The system automatically adjusts CPU allocation when nodes are underutilized
-
-## Contributing
-
-[Add your contribution guidelines here]
-
-## License
-
-[Add your license information here]
