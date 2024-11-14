@@ -21,6 +21,7 @@
 !README.md
 !LICENSE
 !pyproject.toml
+!requirements.txts
 
 # Allow scripts and configurations that are specific to CHTC
 !/assets/download_sra_batches.sh

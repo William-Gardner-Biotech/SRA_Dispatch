@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+import sys; print(sys.path)
+
 
 import os
 import time
@@ -7,12 +8,13 @@ from loguru import logger as lager
 
 # Set the base directory as the working directory
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # __file__ is the .py file executed
-os.chdir(base_dir) # base dir is the
+# os.chdir(base_dir) # base dir is the
 
 from sra_dispatch.balance_nodes import balance_nodes
 from sra_dispatch.build_submit_file import build_submit_file
 from sra_dispatch.query_SRA_for_size import query_SRR_for_size_df
 from sra_dispatch.read_config import load_config
+
 
 def main() -> None:
     """
@@ -48,6 +50,7 @@ def main() -> None:
     - Directory paths
     - Minimum submission thresholds
     """
+
     program_start_time = time.time()
 
     config = load_config(os.path.join(base_dir, "config/config.json"))
