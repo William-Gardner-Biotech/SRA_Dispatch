@@ -19,8 +19,8 @@ A Python-based distributed computing workflow for efficiently downloading and pr
 ## Installation
 
 ```bash
-git clone [your-repository-url]
-cd [repository-name]
+git clone https://github.com/William-Gardner-Biotech/SRA_Dispatch.git
+cd SRA_Dispatch
 
 pip install -r requirements.txt
 ```
