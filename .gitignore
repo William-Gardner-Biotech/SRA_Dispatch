@@ -9,6 +9,8 @@
 !/assets/modules
 !/assets/static_files
 !/config
+!/assets/modules.tar.gz
+!/assets/static_files.tar.gz
 
 # Allow SRA pulldown files
 !/assets/modules/*.py
