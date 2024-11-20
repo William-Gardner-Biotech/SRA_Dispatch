@@ -160,7 +160,7 @@ def balance_nodes(df: pd.DataFrame, configs: dict):
     configs["process_configs"]["cpu_per_node"] = cpu_per_node
 
     # Write out a new json config file
-    with open("submit_configs.json", "w") as submit_json_file:
+    with open("configs/submit_configs.json", "w") as submit_json_file:
         json.dump(configs, submit_json_file, indent=1)
 
     return configs

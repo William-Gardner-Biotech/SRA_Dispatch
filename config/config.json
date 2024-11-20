@@ -18,9 +18,9 @@
   "files": {
       "sra_list_folder": "sras_to_process",
       "sra_query_file": "sra_queue.txt",
-      "static_files": "static_files.tar.gz",
-      "modules": "modules.tar.gz",
-      "sra_processing_program": "download_sra_batches.sh"
+      "static_files": "assets/static_files.tar.gz",
+      "modules": "assets/modules.tar.gz",
+      "sra_processing_program": "assets/download_sra_batches.sh"
   },
   "directory": {
       "output_results": "/staging/groups/oconnor_group/sra_cryptics/Placeholder",

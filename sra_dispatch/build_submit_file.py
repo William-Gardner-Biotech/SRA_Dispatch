@@ -1,3 +1,4 @@
+import os
 import textwrap
 
 from loguru import logger
@@ -27,8 +28,9 @@ def build_submit_file(configs: dict) -> None:
     Returns:
         None. Writes submit file to disk.
     """
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     submit_file_content = textwrap.dedent(f"""
-    executable = {configs['files']['sra_processing_program']}
+    executable = {os.path.join(base_dir, configs['files']['sra_processing_program'])}
     arguments = $(BATCH) {configs['directory']['output_results']}
 
     requirements = (OpSysMajorVer == 7) || (OpSysMajorVer == 8) || (OpSysMajorVer == 9) && (Target.HasCHTCStaging == true)
@@ -38,7 +40,7 @@ def build_submit_file(configs: dict) -> None:
     request_disk = {configs['process_configs']['disk_request']//1000000000}G
 
     # file transfer options
-    transfer_input_files = submit_configs.json, {configs['files']['static_files']}, {configs['files']['modules']}, {configs['files']['sra_processing_program']}, {configs['files']['sra_query_file']}, {configs['files']['sra_list_folder']}
+    transfer_input_files = {os.path.join(base_dir, 'config/submit_configs.json')}, {os.path.join(base_dir, configs['files']['static_files'])}, {os.path.join(base_dir, configs['files']['modules'])}, {os.path.join(base_dir, configs['files']['sra_processing_program'])}, {configs['files']['sra_query_file']}, {configs['files']['sra_list_folder']}
     should_transfer_files = YES
     when_to_transfer_output = ON_EXIT
 
