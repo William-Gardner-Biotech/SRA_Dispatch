@@ -26,11 +26,11 @@ chmod +x miniconda.sh
 rm miniconda.sh
 . miniconda/etc/profile.d/conda.sh
 export PATH=$PWD/miniconda/bin:$PATH
-conda install -c conda-forge -c bioconda sra-tools bbmap minimap2 htslib samtools -y
+conda install -c conda-forge -c bioconda sra-tools bbmap minimap2=2.18 htslib samtools -y
 
 # unzip the input files
-tar -xzvf modules.tar.gz
-tar -xzvf static_files.tar.gz
+tar -xzvf assets/modules.tar.gz
+tar -xzvf assets/static_files.tar.gz
 
 cp static_files/* .
 
