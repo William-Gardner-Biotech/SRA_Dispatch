@@ -115,6 +115,19 @@ def balance_nodes(df: pd.DataFrame, configs: dict):
     # Init the new sra_file_folder
     os.mkdir(configs["files"]["sra_list_folder"])
 
+    # Log null values before processing
+    if df_sorted.isnull().any().any():
+        logger.warning("Missing values detected in input data.")
+        logger.error("Null values per column:")
+        logger.error("\n" + str(df_sorted.isnull().sum()))
+
+        # Log detailed locations of null values (row and column)
+        null_rows = df_sorted[df_sorted.isnull().any(axis=1)]
+        logger.error("Rows with null values:")
+        logger.error("\n" + str(null_rows))
+
+        df_sorted = df_sorted.dropna(subset=["disk_req", "run_1_accession"])
+
     while len(df_sorted) > 0:
         if len(df_sorted) == 1:
             logger.info(f'Group {group}: {df_sorted["disk_req"].iloc[0]}')
