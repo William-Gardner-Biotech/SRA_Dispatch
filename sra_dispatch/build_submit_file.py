@@ -1,5 +1,6 @@
 import os
 import textwrap
+import tarfile
 
 from loguru import logger
 
@@ -40,7 +41,7 @@ def build_submit_file(configs: dict) -> None:
     request_disk = {configs['process_configs']['disk_request']//1000000000}G
 
     # file transfer options
-    transfer_input_files = {os.path.join(base_dir, 'config/submit_configs.json')}, {os.path.join(base_dir, configs['files']['static_files'])}, {os.path.join(base_dir, configs['files']['modules'])}, {os.path.join(base_dir, configs['files']['sra_processing_program'])}, {configs['files']['sra_query_file']}, {configs['files']['sra_list_folder']}
+    transfer_input_files = {os.path.join(base_dir, 'config/submit_configs.json')}, {os.path.join(base_dir, configs['files']['static_files_tar'])}, {os.path.join(base_dir, configs['files']['modules_tar'])}, {os.path.join(base_dir, configs['files']['sra_processing_program'])}, {configs['files']['sra_query_file']}, {configs['files']['sra_list_folder']}
     should_transfer_files = YES
     when_to_transfer_output = ON_EXIT
 
@@ -58,3 +59,10 @@ def build_submit_file(configs: dict) -> None:
         submit_file.write(submit_file_content)
 
     logger.info(f"Submit file written to: {submit_file_path}")
+
+    # Add a tar file with gzip extension for transferring to chtc
+    with tarfile.open(configs['files']['modules_tar'], "w:gz") as module_tar:
+        module_tar.add(configs['files']['modules'], arcname='.') # . makes hje archive relative to '.'
+
+    with tarfile.open(configs['files']['static_files_tar'], "w:gz") as static_tar:
+        static_tar.add(configs['files']['static_files'], arcname='.')

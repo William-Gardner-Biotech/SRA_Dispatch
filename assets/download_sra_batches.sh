@@ -26,13 +26,11 @@ chmod +x miniconda.sh
 rm miniconda.sh
 . miniconda/etc/profile.d/conda.sh
 export PATH=$PWD/miniconda/bin:$PATH
-conda install -c conda-forge -c bioconda sra-tools bbmap minimap2=2.18 htslib samtools -y
+conda install -c conda-forge -c bioconda seqkit sra-tools bbmap minimap2=2.18 htslib samtools -y
 
 # unzip the input files
-tar -xzvf assets/modules.tar.gz
-tar -xzvf assets/static_files.tar.gz
-
-cp static_files/* .
+tar -xzvf modules.tar.gz
+tar -xzvf static_files.tar.gz
 
 touch successful_sra_download.txt
 
@@ -65,6 +63,8 @@ for SRA_NUM in `cat ${sratxt}`; do
   mv ${SRA_NUM}*.cram ${output_folder}
   mv ${SRA_NUM}*.wg_nt_calls.tsv.gz ${output_folder}
   mv ${SRA_NUM}*.wg_unique_seqs.tsv.gz ${output_folder}
+  mv ${SRA_NUM}*.readlen.txt ${output_folder}
+
 
   echo $SRA_NUM >> successful_sra_download.txt
 done
