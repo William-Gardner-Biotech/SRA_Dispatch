@@ -58,20 +58,30 @@ def fetch(SRA_ID):
     print(SRA_ID)
     print(time.ctime(time.time()))
     # # os.system('gzip -d ' +SRA_ID+'*.gz')
-    os.system("prefetch " + SRA_ID)
-    os.system("fasterq-dump " + SRA_ID + " --split-3")
+    os.system(f"prefetch {SRA_ID}")
+    os.system(f"fasterq-dump {SRA_ID} --split-3")
     time.sleep(5)
 
-    if os.path.isfile(SRA_ID+"_1.fastq") and os.path.isfile(SRA_ID+"_2.fastq"):
+    if os.path.isfile(f"{SRA_ID}_1.fastq") and os.path.isfile(f"{SRA_ID}_2.fastq"):
         print("--paired reads--")
         os.system(f"{BBMERGE_PATH} qtrim=t in1={SRA_ID}_1.fastq in2={SRA_ID}_2.fastq  out={SRA_ID}.merge.fq outu1={SRA_ID}.un1.fq outu2={SRA_ID}.un2.fq Xmx={config['process_configs']['memory_request']}G")
+
+        # Cutadapt after merging and handle unmerged
+        print("Trimming paired Reads")
+        os.system(f"cutadapt -j {config['process_configs']['cpu_per_node']} -u 30 -u '-30' -o {SRA_ID}.cut.merge.fq {SRA_ID}.merge.fq --report=minimal >> {SRA_ID}.cutadapt.log 2>&1") # using negative number with -u cuts from end so this trims both ends
+        # Added cutadapt logging files to check work
+
+        os.system(f"cutadapt -j {config['process_configs']['cpu_per_node']} -u 30 -o {SRA_ID}.cut.un1.fq {SRA_ID}.un1.fq --report=minimal >> {SRA_ID}.cutadapt.log 2>&1")
+
+        os.system(f"cutadapt -j {config['process_configs']['cpu_per_node']} -u 30 -o {SRA_ID}.cut.un2.fq {SRA_ID}.un2.fq --report=minimal >> {SRA_ID}.cutadapt.log 2>&1") # -U is used to trim from R2 read
+
         os.system("rm -f " + SRA_ID + "_1.fastq")
         os.system("rm -f " + SRA_ID + "_2.fastq")
         print("combining merged with unique")
-        os.system(f"cat {SRA_ID}.merge.fq {SRA_ID}.un1.fq {SRA_ID}.un2.fq > {SRA_ID}.all.fq")
-        os.system("rm -f " + SRA_ID + ".merge.fq")
-        os.system("rm -f " + SRA_ID + ".un1.fq")
-        os.system("rm -f " + SRA_ID + ".un2.fq")
+        os.system(f"cat {SRA_ID}.cut.merge.fq {SRA_ID}.cut.un1.fq {SRA_ID}.cut.un2.fq > {SRA_ID}.all.fq")
+        os.system("rm -f " + SRA_ID + ".cut.merge.fq")
+        os.system("rm -f " + SRA_ID + ".cut.un1.fq")
+        os.system("rm -f " + SRA_ID + ".cut.un2.fq")
         if os.path.isfile(SRA_ID+".fastq"):
             print("combining merged with unique fastq to all fastq")
             os.system(f"cat {SRA_ID}.fastq >> {SRA_ID}.all.fq")
@@ -81,14 +91,17 @@ def fetch(SRA_ID):
         os.system("rm -f " + SRA_ID + ".all.fq")
     elif os.path.isfile(SRA_ID+".fastq"):
         print("--singleton reads--")
+        os.system(f"cutadapt -j {config['process_configs']['cpu_per_node']} -u 30 -u '-30' -o {SRA_ID}.cut.fastq {SRA_ID}.fastq --report=minimal >> {SRA_ID}.cutadapt.log 2>&1")
         print("Dereplicating the reads")
-        os.system(f"python {DEREP_PATH} {SRA_ID}.fastq {SRA_ID}.collapsed.fa 1")
+        os.system(f"python {DEREP_PATH} {SRA_ID}.cut.fastq {SRA_ID}.collapsed.fa 1")
         os.system("rm -f " + SRA_ID + ".fastq")
     elif os.path.isfile(SRA_ID+"_1.fastq"):
         print("singleton reads")
+        print("Cutting adapters")
+        os.system(f"cutadapt -j {config['process_configs']['cpu_per_node']} -u 30 -o {SRA_ID}_1.cut.fastq {SRA_ID}_1.fastq --report=minimal >> {SRA_ID}.cutadapt.log 2>&1")
         print("Dereplicating the reads")
-        os.system(f"python {DEREP_PATH} {SRA_ID}_1.fastq {SRA_ID}.collapsed.fa 1")
-        os.system("rm -f " + SRA_ID + "_1.fastq")
+        os.system(f"python {DEREP_PATH} {SRA_ID}_1.cut.fastq {SRA_ID}.collapsed.fa 1")
+        os.system("rm -f " + SRA_ID + "_1.cut.fastq")
     elif os.path.isfile(SRA_ID+"_2.fastq"):
         print("------------------------------------------ ")
         print("------------------------------------------ ")

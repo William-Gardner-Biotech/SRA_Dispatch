@@ -26,11 +26,13 @@ chmod +x miniconda.sh
 rm miniconda.sh
 . miniconda/etc/profile.d/conda.sh
 export PATH=$PWD/miniconda/bin:$PATH
-conda install -c conda-forge -c bioconda seqkit sra-tools bbmap minimap2=2.18 htslib samtools -y
+conda install -c conda-forge -c bioconda sra-tools bbmap minimap2=2.18 htslib samtools cutadapt -y
 
 # unzip the input files
-tar -xzvf modules.tar.gz
-tar -xzvf static_files.tar.gz
+tar -xzvf assets/modules.tar.gz
+tar -xzvf assets/static_files.tar.gz
+
+cp static_files/* .
 
 touch successful_sra_download.txt
 
@@ -42,7 +44,7 @@ for SRA_NUM in `cat ${sratxt}`; do
   rm -rf ${SRA_NUM}
 
   python3 SAM_Refiner.py -r SARS2.gb \
-  --wgs 1 --collect 0 --seq 1 --indel 0 --covar 0 --nt_call 1 --min_count 1 \
+  --wgs 1 --collect 0 --seq 1 --indel 0 --covar 1 --nt_call 1 --min_count 1 \
   --min_samp_abund 0 --ntabund 0 --ntcover 1 --mp 4 --chim_rm 0 --deconv 0  -S ${SRA_NUM}.SARS2.wg.sam
 
   echo SAM SORTING
@@ -58,13 +60,15 @@ for SRA_NUM in `cat ${sratxt}`; do
   rm -f ${SRA_NUM}.SARS2.wg_unique_seqs.tsv
   gzip ${SRA_NUM}.SARS2.wg_nt_calls.tsv
   rm -f ${SRA_NUM}.SARS2.wg_nt_calls.tsv
+  gzip ${SRA_NUM}*_covars.tsv
+  rm -f ${SRA_NUM}*_covars.tsv
 
   echo Moving all processed files to ${output_folder}
   mv ${SRA_NUM}*.cram ${output_folder}
   mv ${SRA_NUM}*.wg_nt_calls.tsv.gz ${output_folder}
   mv ${SRA_NUM}*.wg_unique_seqs.tsv.gz ${output_folder}
-  mv ${SRA_NUM}*.readlen.txt ${output_folder}
-
+  mv ${SRA_NUM}*.cutadapt.log ${output_folder}
+  mv ${SRA_NUM}*_covars.tsv.gz ${output_folder}
 
   echo $SRA_NUM >> successful_sra_download.txt
 done
